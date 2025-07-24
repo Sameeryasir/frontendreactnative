@@ -23,10 +23,6 @@ const Code = () => {
   const [loading, setLoading] = React.useState(false);
 
   const handleContinue = async () => {
-    if (!code.trim()) {
-      Alert.alert("Input Required", "Please enter the code to proceed");
-      return;
-    }
     setLoading(true);
     try {
       const data = await verifyOtp(email, code.trim());
@@ -61,7 +57,14 @@ const Code = () => {
         keyboardType="number-pad"
         autoCapitalize="none"
       />
-      <TouchableOpacity style={styles.continueButton} onPress={handleContinue} disabled={loading}>
+      <TouchableOpacity 
+        style={[
+          styles.continueButton,
+          !code.trim() && styles.disabledButton
+        ]} 
+        onPress={handleContinue} 
+        disabled={loading || !code.trim()}
+      >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
@@ -129,6 +132,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
+  },
+  disabledButton: {
+    backgroundColor: "#ccc",
   },
 });
 

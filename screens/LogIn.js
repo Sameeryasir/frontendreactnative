@@ -9,6 +9,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { sendOtp } from "../services/auth/SendOtp";
@@ -20,13 +21,6 @@ const LogIn = () => {
   const [loading, setLoading] = React.useState(false);
 
   const handleContinue = async () => {
-    if (!input.trim()) {
-      Alert.alert(
-        "Input Required",
-        "Please enter the email or phone to proceed"
-      );
-      return;
-    }
     setLoading(true);
     try {
       await sendOtp(input.trim());
@@ -56,9 +50,12 @@ const LogIn = () => {
         autoCapitalize="none"
       />
       <TouchableOpacity
-        style={styles.continueButton}
+        style={[
+          styles.continueButton,
+          !input.trim() && styles.disabledButton
+        ]}
         onPress={handleContinue}
-        disabled={loading}
+        disabled={loading || !input.trim()}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
@@ -120,6 +117,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "600",
+  },
+  disabledButton: {
+    backgroundColor: "#ccc",
   },
 });
 
